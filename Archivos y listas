@@ -1,0 +1,84 @@
+#include <iostream>
+using namespace std;
+
+struct ti {
+	int nl;
+	int cm;
+};
+struct nodo{
+	nodo*sgte;
+	ti info;
+};
+struct tr {
+	int nl;
+	int cm;
+	char ayn [30];
+};
+nodo*insertarOrdenado(nodo*&lista, ti x);
+ti pop (nodo*&lista);
+
+int main (){
+	
+	FILE*f=fopen ("miarchivo.dat","wb+");
+	int i; tr r; nodo*lista=NULL; ti x;
+	
+	for (i=0;i<3;i++){
+		cout<< "Ingresa numero de legajo: ";
+		cin >> r.nl;
+		cout<<endl<<"Ingresa codigo de materia: ";
+		cin >> r.cm;
+		cout<<endl<< "Ingrese Apellido y nombre";
+		cin >> r.ayn;
+		cout<<endl;
+		fwrite (&r,sizeof (r),1,f);
+	}
+	fseek (f,0,SEEK_SET);
+	
+	
+	while (fread(&r,sizeof (r),1,f)){
+		x.nl = r.nl;
+		x.cm=r.cm;
+		insertarOrdenado (lista,x);
+	}
+	
+	while (lista != NULL){
+		x = pop(lista);
+		/*x.nl=lista->info.nl;
+		x.cm=lista->info.cm;*/
+		cout<< x.nl<<"    ";
+		cout<<x.cm<<endl;
+	
+	}
+	fclose (f);
+		return 0;
+}
+
+nodo*insertarOrdenado (nodo*&lista, ti x){
+	nodo*p= new nodo ();
+	p -> info= x;
+	
+	if (lista == NULL || x.nl < lista ->info.nl){
+		p->sgte = lista;
+		lista = p;
+	}
+	else {
+		nodo*q = lista;
+		
+		while (q->sgte !=NULL && x.nl > q-> sgte->info.nl){
+			q=q-> sgte;
+			q-> sgte = p->sgte;
+			p->sgte = q;
+		}
+		return p;
+	}
+	
+}
+ti pop (nodo*&lista){
+		nodo*p = lista;
+		ti x = p->info;
+		lista = p->sgte;
+		
+		delete p;
+		return x;
+	
+	}
